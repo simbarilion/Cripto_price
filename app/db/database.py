@@ -10,3 +10,6 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine
 )
+
+from .models import Base                 # Создание таблиц
+Base.metadata.create_all(bind=engine)
