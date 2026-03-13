@@ -5,6 +5,7 @@ from app.db.models import Price
 
 
 def save_price(ticker: str, price: float):
+    """Сохраняет данные о ценах в БД"""
     db = SessionLocal()
     db_price = Price(
         ticker=ticker,

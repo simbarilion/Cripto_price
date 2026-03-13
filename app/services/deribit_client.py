@@ -1,13 +1,12 @@
 import aiohttp
 import asyncio
 
-from app.services.price_service import save_price
-
 
 DERIBIT_URL = "https://www.deribit.com/api/v2/public/get_index_price"
 
 
 class DeribitClient:
+    """Получает цены с Deribit"""
     def __init__(self):
         self.tickers = ["btc_usd", "eth_usd"]
 

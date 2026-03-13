@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Celery конфигурация
 celery = Celery(
     "worker",
     broker=os.getenv("CELERY_BROKER_URL")
