@@ -1,8 +1,23 @@
-from fastapi import FastAPI
+import asyncio
 
-app = FastAPI()
+from app.services.deribit_client import DeribitClient
 
 
-@app.get("/")
-def root():
-    return {"message": "Crypto API running"}
+async def main():
+    client = DeribitClient()
+    prices = await client.fetch_all_prices()
+    print(prices)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+
+# from fastapi import FastAPI
+#
+# app = FastAPI()
+#
+#
+# @app.get("/")
+# def root():
+#     return {"message": "Crypto API running"}
