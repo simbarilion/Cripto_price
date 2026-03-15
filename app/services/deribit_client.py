@@ -18,7 +18,7 @@ class DeribitClient:
             data = await response.json()
             return data["result"]["index_price"]
 
-    async def fetch_all_prices(self) -> dict:
+    async def fetch_all_prices(self) -> dict[str, float]:
         async with aiohttp.ClientSession() as session:
             tasks = [self.fetch_price(session, ticker) for ticker in self.tickers]
             results = await asyncio.gather(*tasks)

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, BigInteger
+from sqlalchemy import Column, Integer, String, Float, BigInteger, Index
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -7,7 +7,10 @@ class Price(Base):
     """SQLAlchemy модель"""
     __tablename__ = "prices"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     ticker = Column(String, index=True)
     price = Column(Float)
     timestamp = Column(BigInteger, index=True)
+    __table_args__ = (
+        Index("idx_ticker_timestamp", "ticker", "timestamp"),
+    )  # составной индекс ускорит выборку WHERE ticker=... AND timestamp BETWEEN
