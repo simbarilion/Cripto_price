@@ -1,5 +1,5 @@
 from sqlalchemy import BigInteger, Column, Float, Index, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
@@ -13,6 +13,4 @@ class Price(Base):
     ticker = Column(String, index=True)
     price = Column(Float)
     timestamp = Column(BigInteger, index=True)
-    __table_args__ = (
-        Index("idx_ticker_timestamp", "ticker", "timestamp"),
-    )  # составной индекс ускорит выборку WHERE ticker=... AND timestamp BETWEEN
+    __table_args__ = (Index("idx_ticker_timestamp", "ticker", "timestamp"),)

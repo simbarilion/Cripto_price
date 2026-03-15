@@ -26,7 +26,7 @@ def get_prices(
         .offset(offset)
         .all()
     )
-    return prices  # FastAPI сам конвертирует в PriceResponse через Pydantic модель
+    return prices
 
 
 @app.get("/price/latest", response_model=PriceResponse)
