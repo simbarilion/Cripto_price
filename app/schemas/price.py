@@ -7,5 +7,4 @@ class PriceResponse(BaseModel):
     price: float
     timestamp: int
 
-    class Config:
-        orm_mode = True  # FastAPI автоматически конвертировать объекты SQLAlchemy в Pydantic
+    model_config = {"from_attributes": True}  # FastAPI автоматически конвертировать объекты SQLAlchemy в Pydantic
