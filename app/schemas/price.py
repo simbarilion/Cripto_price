@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class PriceResponse(BaseModel):
-    """Pydantic модель для валидации и сериализации данных"""
+    """Pydantic модель для возврата данных о ценах валют"""
     price: float
     timestamp: int
 

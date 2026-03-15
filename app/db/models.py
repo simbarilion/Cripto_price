@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class Price(Base):
-    """SQLAlchemy модель"""
+    """SQLAlchemy модель для хранения данных: id, тикер валюты, текущая цена, время (UNIX timestamp)"""
     __tablename__ = "prices"
 
     id = Column(Integer, primary_key=True)

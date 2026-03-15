@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "cripto-price"
 version = "0.1.0"
-description = "Deribit crypto exchange client"
+description = "Crypto Deribit Price Service"
 authors = ["Nadezhda_Popova <nadezhdapopova13@yandex.ru>"]
 readme = "README.md"
 

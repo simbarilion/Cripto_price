@@ -3,10 +3,13 @@ from typing import List
 from fastapi import FastAPI, Query, HTTPException, Depends
 from sqlalchemy.orm import Session
 
+from app.core.logger import setup_logger
 from app.db.database import get_db
 from app.db.models import Price
 from app.schemas.price import PriceResponse
 
+
+logger = setup_logger(__name__, log_to_console=True)
 app = FastAPI(title="Crypto Prices API")
 
 @app.get("/prices", response_model=List[PriceResponse])
@@ -16,7 +19,8 @@ def get_prices(
         offset: int = Query(0),
         db: Session = Depends(get_db)
 ):
-    """Получение всех данных по валюте"""
+    """Возвращает все данные по валюте"""
+    logger.info("Request data for %s", ticker)
     prices = (
         db.query(Price)
         .filter(Price.ticker == ticker)
@@ -33,7 +37,8 @@ def get_latest_price(
         ticker: str = Query(...),
         db: Session = Depends(get_db)
 ):
-    """Получение последней цены"""
+    """Возвращает последнюю цену валюты"""
+    logger.info("Request latest price for %s", ticker)
     price = (
         db.query(Price)
         .filter(Price.ticker == ticker)
@@ -41,6 +46,7 @@ def get_latest_price(
         .first()
     )
     if not price:
+        logger.error("No price data found for %s", ticker)
         raise HTTPException(status_code=404, detail="No data")
     return price
 
@@ -52,7 +58,13 @@ def get_price_by_date(
         to_ts: int = Query(...),
         db: Session = Depends(get_db)
 ):
-    """Получение данных по дате"""
+    """Возвращает цену валюты с фильтром по дате"""
+    logger.info("Request price for %s", ticker)
+    if from_ts > to_ts:
+        raise HTTPException(
+            status_code=400,
+            detail="from_ts must be less than to_ts"
+        )
     prices = (
         db.query(Price)
         .filter(
