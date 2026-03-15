@@ -4,8 +4,8 @@ from app.core.logger import setup_logger
 from app.services.price_fetcher import fetch_and_store_prices
 from app.tasks.celery_app import celery
 
-
 logger = setup_logger(__name__, log_to_console=True)
+
 
 @celery.task
 def fetch_and_save_prices():

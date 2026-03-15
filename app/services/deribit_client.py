@@ -1,15 +1,16 @@
-import aiohttp
 import asyncio
 
-from app.core.config import TICKERS, DERIBIT_URL
-from app.core.logger import setup_logger
+import aiohttp
 
+from app.core.config import DERIBIT_URL, TICKERS
+from app.core.logger import setup_logger
 
 logger = setup_logger(__name__, log_to_console=True)
 
 
 class DeribitClient:
     """Асинхронный клиент для получения цен криптовалютных индексов с Deribit"""
+
     def __init__(self):
         self.tickers = TICKERS
 
@@ -40,8 +41,4 @@ class DeribitClient:
         async with aiohttp.ClientSession() as session:
             tasks = [self.fetch_price(session, ticker) for ticker in self.tickers]
             results = await asyncio.gather(*tasks)
-        return {
-            ticker: price
-            for ticker, price in zip(self.tickers, results)
-            if price is not None
-        }
+        return {ticker: price for ticker, price in zip(self.tickers, results) if price is not None}

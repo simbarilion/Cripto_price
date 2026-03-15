@@ -62,10 +62,16 @@ GET /price/by-date?ticker=btc_usd&from_ts=1700000000&to_ts=1700100000
 
 В файле `.env` должны быть указаны:
 
+````
+DEBUG=True
+
 DATABASE_URL=postgresql://postgres:password@localhost:5432/crypto_deribit
+
 LOCATION=redis://127.0.0.1:6379/0
+
 CELERY_BROKER_URL=redis://127.0.0.1:6379/1
 CELERY_RESULT_BACKEND=redis://127.0.0.1:6379/2
+````
 
 ## Запуск проекта
 
