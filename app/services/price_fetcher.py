@@ -7,4 +7,5 @@ async def fetch_and_store_prices():
     client = DeribitClient()
     prices = await client.fetch_all_prices()
     for ticker, price in prices.items():
-        save_price(ticker, price)
+        if price is not None:
+            save_price(ticker, price)

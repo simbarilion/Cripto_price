@@ -9,7 +9,8 @@ load_dotenv()
 # Celery конфигурация
 celery = Celery(
     "worker",
-    broker=os.getenv("CELERY_BROKER_URL")
+    broker=os.getenv("CELERY_BROKER_URL"),
+    backend=os.getenv("CELERY_RESULT_BACKEND")
 )
 
 celery.conf.beat_schedule = {
