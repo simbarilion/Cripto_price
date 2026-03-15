@@ -12,10 +12,19 @@ app = FastAPI(title="Crypto Prices API")
 @app.get("/prices", response_model=List[PriceResponse])
 def get_prices(
         ticker: str = Query(...),
+        limit: int = Query(100, le=1000),
+        offset: int = Query(0),
         db: Session = Depends(get_db)
 ):
     """Получение всех данных по валюте"""
-    prices = db.query(Price).filter(Price.ticker == ticker).all()
+    prices = (
+        db.query(Price)
+        .filter(Price.ticker == ticker)
+        .order_by(Price.timestamp.desc())
+        .limit(limit)
+        .offset(offset)
+        .all()
+    )
     return prices  # FastAPI сам конвертирует в PriceResponse через Pydantic модель
 
 
@@ -25,7 +34,12 @@ def get_latest_price(
         db: Session = Depends(get_db)
 ):
     """Получение последней цены"""
-    price = db.query(Price).filter(Price.ticker == ticker).order_by(Price.timestamp.desc()).first()
+    price = (
+        db.query(Price)
+        .filter(Price.ticker == ticker)
+        .order_by(Price.timestamp.desc())
+        .first()
+    )
     if not price:
         raise HTTPException(status_code=404, detail="No data")
     return price
@@ -34,14 +48,18 @@ def get_latest_price(
 @app.get("/price/by-date", response_model=List[PriceResponse])
 def get_price_by_date(
         ticker: str = Query(...),
-        from_ts: int = Query(..., description="UNIX timestamp от"),
-        to_ts: int = Query(..., description="UNIX timestamp до"),
+        from_ts: int = Query(...),
+        to_ts: int = Query(...),
         db: Session = Depends(get_db)
 ):
     """Получение данных по дате"""
-    prices = db.query(Price).filter(
-        Price.ticker == ticker,
-        Price.timestamp >= from_ts,
-        Price.timestamp <= to_ts
-    ).all()
+    prices = (
+        db.query(Price)
+        .filter(
+            Price.ticker == ticker,
+            Price.timestamp >= from_ts,
+            Price.timestamp <= to_ts
+        ).order_by(Price.timestamp)
+        .all()
+    )
     return prices
