@@ -29,6 +29,10 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      CI: true
+
     steps:
     - name: Check out code
       uses: actions/checkout@v3
