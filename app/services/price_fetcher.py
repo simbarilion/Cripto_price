@@ -1,9 +1,11 @@
 from app.core.logger import setup_logger
 from app.db.database import SessionLocal
 from app.services.deribit_client import DeribitClient
-from app.services.price_service import save_price
+from app.services.price_service import PriceService
 
 logger = setup_logger(__name__, log_to_console=True)
+
+service = PriceService()
 
 
 async def fetch_and_store_prices():
@@ -18,7 +20,7 @@ async def fetch_and_store_prices():
     db = SessionLocal()
     try:
         for ticker, price in prices.items():
-            save_price(db, ticker, price)
+            service.save_price(db, ticker, price)
         db.commit()
     except Exception as e:
         db.rollback()

@@ -48,9 +48,9 @@ class PriceRepository:
         db_price = Price(ticker=ticker, price=price, timestamp=int(time.time()))
         db.add(db_price)
 
-    def save_prices_batch(self, db: Session, prices: dict[str, float]):
-        """Сохраняет данные о ценах валют с текущей датой в БД"""
-        timestamp = int(time.time())
-
-        objects = [Price(ticker=t, price=p, timestamp=timestamp) for t, p in prices.items()]
-        db.add_all(objects)
+    # def save_prices_batch(self, db: Session, prices: dict[str, float]):
+    #     """Сохраняет данные о ценах валют с текущей датой в БД"""
+    #     timestamp = int(time.time())
+    #
+    #     objects = [Price(ticker=t, price=p, timestamp=timestamp) for t, p in prices.items()]
+    #     db.add_all(objects)

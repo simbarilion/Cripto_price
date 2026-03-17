@@ -27,5 +27,8 @@ class PriceService:
             raise ValueError("from_ts must be less than to_ts")
         return self.repo.get_price_by_date(db, ticker, limit, from_ts, to_ts)
 
-    def save_prices_batch(self, db: Session, prices: dict[str, float]):
-        self.repo.save_prices_batch(db, prices)
+    def save_price(self, db: Session, ticker: str, price: float):
+        self.repo.save_price(db, ticker, price)
+
+    # def save_prices_batch(self, db: Session, prices: dict[str, float]):
+    #     self.repo.save_prices_batch(db, prices)
