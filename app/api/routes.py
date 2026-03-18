@@ -12,7 +12,7 @@ service = PriceService()
 
 
 @router.get("/", response_model=List[PriceResponse], summary="Поддерживаемые тикеры: btc_usd, eth_usd")
-def get_prices(db: DBSession, ticker: Ticker, limit: Limit, offset: Offset):
+def get_prices(db: DBSession, ticker: Ticker, limit: Limit = 100, offset: Offset = 0):
     """Возвращает список цен для указанного тикера"""
     return service.get_prices(db, ticker, limit, offset)
 
@@ -24,6 +24,8 @@ def get_latest_price(db: DBSession, ticker: Ticker):
 
 
 @router.get("/by-date", response_model=List[PriceResponse], summary="Поддерживаемые тикеры: btc_usd, eth_usd")
-def get_price_by_date(db: DBSession, ticker: Ticker, from_ts: From_ts, to_ts: To_ts, limit: Limit, offset: Offset):
+def get_price_by_date(
+    db: DBSession, ticker: Ticker, from_ts: From_ts, to_ts: To_ts, limit: Limit = 100, offset: Offset = 0
+):
     """Возвращает список цен для указанного тикера с фильтром по дате"""
     return service.get_price_by_date(db, ticker, from_ts, to_ts, limit, offset)

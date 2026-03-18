@@ -19,8 +19,7 @@ async def fetch_and_store_prices():
 
     db = SessionLocal()
     try:
-        for ticker, price in prices.items():
-            service.save_price(db, ticker, price)
+        service.save_prices_batch(db, prices)
         db.commit()
     except Exception as e:
         db.rollback()
