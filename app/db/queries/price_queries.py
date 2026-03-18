@@ -1,6 +1,6 @@
 import time
 
-from sqlalchemy import select
+from sqlalchemy import insert, select
 from sqlalchemy.orm import Session
 
 from app.core.logger import setup_logger
@@ -61,19 +61,6 @@ class PriceRepository:
         )
         return db.scalars(query).all()
 
-    def save_price(self, db: Session, ticker: str, price: float):
-        """
-        SQL-запрос: cохраняет цену тикера с текущей датой
-        Args:
-            db: SQLAlchemy Session
-            ticker: тикер валюты
-            price: цена тикера
-            Returns:
-                None
-        """
-        db_price = Price(ticker=ticker, price=price, timestamp=int(time.time()))
-        db.add(db_price)
-
     def save_prices_batch(self, db: Session, prices: dict[str, float]):
         """
         SQL-запрос: cохраняет цены тикеров с текущей датой
@@ -83,4 +70,6 @@ class PriceRepository:
             Returns:
                 None
         """
-        db.add_all([Price(ticker=t, price=p, timestamp=int(time.time())) for t, p in prices.items()])
+        timestamp = int(time.time())
+        query = insert(Price).values([{"ticker": t, "price": p, "timestamp": timestamp} for t, p in prices.items()])
+        db.execute(query)

@@ -9,11 +9,16 @@ logger = setup_logger(__name__)
 
 async def log_requests(request: Request, call_next):
     start = time.time()
-
     response = await call_next(request)
-
     duration = time.time() - start
 
-    logger.info("%s %s -> %s (%.3f sec)", request.method, request.url.path, response.status_code, duration)
+    logger.info(
+        "%s %s %s -> %s (%.3f sec)",
+        request.method,
+        request.url.path,
+        request.url.query,
+        response.status_code,
+        duration,
+    )
 
     return response

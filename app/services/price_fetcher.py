@@ -21,6 +21,7 @@ async def fetch_and_store_prices():
     try:
         service.save_prices_batch(db, prices)
         db.commit()
+        logger.info("Saved %d prices to DB", len(prices))
     except Exception as e:
         db.rollback()
         logger.error("Failed to save prices: %s", e)

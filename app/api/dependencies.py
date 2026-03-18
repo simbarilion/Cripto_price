@@ -11,5 +11,5 @@ Ticker = Annotated[str, Query(...)]
 Limit = Annotated[int, Query(le=10000)]
 Offset = Annotated[int, Query()]
 
-From_ts = Annotated[int, Query(...)]
-To_ts = Annotated[int, Query(...)]
+From_ts = Annotated[int, Query(..., ge=0)]
+To_ts = Annotated[int, Query(..., ge=0)]
