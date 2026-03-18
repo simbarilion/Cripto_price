@@ -19,6 +19,7 @@ redis = "^7.3.0"
 pydantic = "^2.12.5"
 python-dotenv = "^1.2.2"
 pre-commit = "^4.5.1"
+alembic = "^1.18.4"
 
 
 [build-system]

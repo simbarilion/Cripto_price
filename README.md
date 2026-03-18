@@ -85,6 +85,9 @@
     │
     ├── main.py                # точка входа приложения
     │
+    │
+    ├── alembic/               # Alembic миграции
+    │
     .env.example               # пример настройки перменных окружения
     │
     Makefile                   # запуск линтеров и форматирования
@@ -216,7 +219,12 @@ CELERY_RESULT_BACKEND=redis://127.0.0.1:6379/2
 ```
 redis-server
 ```
-5. Запустите Celery worker
+5. Примените миграции Alembic
+```
+alembic upgrade head
+```
+
+6. Запустите Celery worker
 ```
 # Linux / Mac:
 
@@ -226,11 +234,11 @@ celery -A app.tasks.celery_app worker -l info
 
 celery -A app.tasks.celery_app worker -l info -P solo
 ```
-6. Запустите Celery beat
+7. Запустите Celery beat
 ```
 celery -A app.tasks.celery_app beat -l info
 ```
-7. Запустите FastAPI
+8. Запустите FastAPI
 ```
 uvicorn app.main:app --reload
 ```
@@ -291,6 +299,9 @@ pytest --cov=. --cov-report=html
   - фильтрацию по периоду
   - фильтрацию по нескольким полям (ticker, timestamp)
 
+- **Alembic**
+- Используется Alembic для управления схемой PostgreSQL.
+
 - Middleware
   - Используется для логирования HTTP запросов и времени выполнения
 
@@ -305,7 +316,6 @@ pytest --cov=. --cov-report=html
 - Ограничение частоты запросов (rate limiting)
 - Кэширование последних цен
 - Поддержка дополнительных криптовалют
-- Alembic миграции
 
 ## Автор
 
