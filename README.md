@@ -194,7 +194,7 @@ http://localhost:8000/docs
 
 1. Клонируйте репозиторий:
 ```
-git clone https://gitlab.com/simbarilion/Cripto_price.git
+git clone https://github.com/simbarilion/Cripto_price.git
 cd Cripto_price
 ```
 2. Установите зависимости:
