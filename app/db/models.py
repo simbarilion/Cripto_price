@@ -1,5 +1,6 @@
-from sqlalchemy import BigInteger, Column, Float, Index, Integer, String
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import BigInteger, Index
+from sqlalchemy.orm import Mapped, declarative_base
+from sqlalchemy.testing.schema import mapped_column
 
 Base = declarative_base()
 
@@ -9,8 +10,8 @@ class Price(Base):
 
     __tablename__ = "prices"
 
-    id = Column(Integer, primary_key=True)
-    ticker = Column(String, index=True)
-    price = Column(Float)
-    timestamp = Column(BigInteger, index=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ticker: Mapped[str] = mapped_column(index=True)
+    price: Mapped[float] = mapped_column()
+    timestamp: Mapped[int] = mapped_column(BigInteger, index=True)
     __table_args__ = (Index("idx_ticker_timestamp", "ticker", "timestamp"),)

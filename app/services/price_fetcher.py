@@ -1,8 +1,11 @@
 from app.core.logger import setup_logger
+from app.db.database import SessionLocal
 from app.services.deribit_client import DeribitClient
-from app.services.price_service import save_price
+from app.services.price_service import PriceService
 
 logger = setup_logger(__name__, log_to_console=True)
+
+service = PriceService()
 
 
 async def fetch_and_store_prices():
@@ -13,5 +16,14 @@ async def fetch_and_store_prices():
         logger.warning("No prices received from Deribit")
         return
     logger.info("Fetched %d from Deribit", len(prices))
-    for ticker, price in prices.items():
-        save_price(ticker, price)
+
+    db = SessionLocal()
+    try:
+        service.save_prices_batch(db, prices)
+        db.commit()
+        logger.info("Saved %d prices to DB", len(prices))
+    except Exception as e:
+        db.rollback()
+        logger.error("Failed to save prices: %s", e)
+    finally:
+        db.close()
