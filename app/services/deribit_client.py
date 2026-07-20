@@ -44,7 +44,7 @@ class DeribitClient:
             limit=50,  # общее количество одновременных соединений
             limit_per_host=50,  # количество одновременных соединений к одному ресурсу
         )
-        timeout = aiohttp.ClientTimeout(total=10)  # глобальный таймаут для сессии (подключение и ответ)
+        timeout = aiohttp.ClientTimeout(total=10)  # глобальный тайм-аут для сессии (подключение и ответ)
 
         async with aiohttp.ClientSession(connector=connector, timeout=timeout) as session:
             tasks = [self.fetch_price(session, ticker) for ticker in self.tickers]
