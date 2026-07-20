@@ -141,7 +141,7 @@ http://localhost:8000/docs
 
 Пример запроса:
 
-**GET /price/latest?ticker=btc_usd**
+**GET /prices/latest?ticker=btc_usd**
 
 Пример ответа:
 ```
@@ -158,7 +158,7 @@ http://localhost:8000/docs
 
 Пример запроса:
 
-**GET /price/by-date?ticker=btc_usd&from_ts=1773608340&to_ts=1773608400**
+**GET /prices/by-date?ticker=btc_usd&from_ts=1773608340&to_ts=1773608400**
 
 Параметры:
 

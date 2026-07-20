@@ -18,10 +18,10 @@ async def test_fetch_all_prices():
 async def test_fetch_all_prices_mocked_fetch_price(monkeypatch):
     """Проверяет корректную работу fetch_all_prices при замоканном fetch_price"""
 
-    async def mock_fetch_price(self, session, ticker):
+    async def mock_fetch_price(session, ticker):
         return 50000.0
 
-    monkeypatch.setattr(DeribitClient, "fetch_price", mock_fetch_price)
+    monkeypatch.setattr(DeribitClient, "fetch_price", staticmethod(mock_fetch_price))
     client = DeribitClient()
     prices = await client.fetch_all_prices()
 
