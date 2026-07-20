@@ -17,6 +17,7 @@
 - Предоставляет REST API для получения данных
 - Поддерживает пагинацию и фильтрацию по дате
 - Выполняет асинхронные HTTP запросы для ускорения получения данных
+- Валидация параметров на уровне API (тикер, диапазон дат)
 
 Поддерживаемые тикеры: 
 - btc_usd 
@@ -27,7 +28,7 @@
 - **Python 3.12**
 - **FastAPI**
 - **PostgreSQL**
-- **SQLAlchemy 2**
+- **SQLAlchemy 2** (async, через asyncpg)
 - **Celery**
 - **Redis**
 - **aiohttp** (асинхронный HTTP-клиент)
@@ -35,16 +36,16 @@
 
 ## Архитектура
 Сервис использует слоистую архитектуру.
-    FastAPI API
+    FastAPI API (async)
           │
           ▼
-    Service Layer
+    Service Layer (async)
           │
           ▼
-    Repository Layer
+    Repository Layer (async)
           │
           ▼
-    PostgreSQL
+    PostgreSQL (asyncpg)
 
 Фоновая обработка данных:
     Celery Worker
@@ -53,7 +54,7 @@
     Async Deribit Client (aiohttp)
           │
           ▼
-    PostgreSQL
+    PostgreSQL (asyncpg)
 
 
 ## Структура проекта
@@ -66,7 +67,9 @@
     │   └── dependencies.py
     ├── db/                    # модели БД и подключение
     │   ├── database.py
-    │   └── models.py
+    │   ├── models.py
+    │   └── queries/
+    │       └── price_queries.py
     │
     ├── schemas/               # Pydantic схемы
     │
@@ -88,7 +91,7 @@
     │
      alembic/                  # Alembic миграции
     │
-    .env.example               # пример настройки перменных окружения
+    .env.example               # пример настройки переменных окружения
     │
     Makefile                   # запуск линтеров и форматирования
     │
@@ -115,9 +118,9 @@ http://localhost:8000/docs
 
 Параметры:
 
-- ticker — тикер валюты (обязательный)
+- ticker — тикер валюты (обязательный, допустимые значения: `btc_usd`, `eth_usd`)
 
-- limit — количество записей (по умолчанию 100, максимум 1000)
+- limit — количество записей (по умолчанию 100, максимум 10000)
 
 - offset — смещение для пагинации (по умолчанию 0)
 
@@ -134,6 +137,8 @@ http://localhost:8000/docs
   }
 ]
 ```
+
+При передаче недопустимого тикера возвращается **422 Unprocessable Entity**.
 
 ### Получение последней цены
 
@@ -253,8 +258,6 @@ http://localhost:8000/docs
 - pytest
 - pytest-asyncio
 
-**Покрытие тестами:** 52%
-
 **Запуск тестов:**
 ```bash
 
@@ -271,6 +274,12 @@ pytest --cov=. --cov-report=html
 
 ## Архитектурные решения (Design decisions)
 
+- **Async SQLAlchemy + asyncpg**
+  - Все запросы к PostgreSQL выполняются асинхронно через `AsyncSession`
+  - Используется драйвер `asyncpg` вместо синхронного `psycopg2`
+  - Не блокирует event loop FastAPI при работе с базой данных
+  - Alembic миграции работают через синхронный драйвер (ограничение Alembic)
+
 - **Celery**
   - Используется для выполнения периодических фоновых задач
   - Celery Beat запускает задачу получения цен каждую минуту
@@ -278,6 +287,10 @@ pytest --cov=. --cov-report=html
 - **aiohttp**
   - Асинхронный HTTP клиент используется для параллельного получения цен
   - Это значительно ускоряет сбор данных
+
+- **Валидация тикеров**
+  - Тикеры валидируются на уровне API с помощью `Literal["btc_usd", "eth_usd"]`
+  - Невалидный тикер возвращает 422 Unprocessable Entity
 
 - **Service Layer**
   - Бизнес-логика вынесена из API контроллеров в отдельный сервисный слой.
